@@ -1,0 +1,7 @@
+{
+  "dataset_type": "deterministic synthetic telemetry benchmark",
+  "records": 150000,
+  "correct": 142530,
+  "accuracy": 95.02,
+  "limitations": "Synthetic accuracy is not a production ML claim. Validate with real organization telemetry before operational use."
+}
