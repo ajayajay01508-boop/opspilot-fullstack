@@ -28,9 +28,6 @@ jobs:
         working-directory: backend/go-processor
       - name: Emit generated dependency files
         run: |
-          echo "PACKAGE_LOCK_BEGIN"
-          base64 -w0 package-lock.json | fold -w 4000 | sed 's/^/PACKAGE_LOCK:'
-          echo "PACKAGE_LOCK_END"
           echo "GO_MOD_BEGIN"
           base64 -w0 backend/go-processor/go.mod | fold -w 4000 | sed 's/^/GO_MOD:'
           echo "GO_MOD_END"
