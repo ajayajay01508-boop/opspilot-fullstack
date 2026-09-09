@@ -28,9 +28,8 @@ jobs:
         working-directory: backend/go-processor
       - name: Emit generated dependency files
         run: |
-          echo "GO_MOD_BEGIN"
-          base64 -w0 backend/go-processor/go.mod | fold -w 4000 | sed 's/^/GO_MOD:'
-          echo "GO_MOD_END"
-          echo "GO_SUM_BEGIN"
-          base64 -w0 backend/go-processor/go.sum | fold -w 4000 | sed 's/^/GO_SUM:'
-          echo "GO_SUM_END"
+          printf "GO_MOD:"
+          base64 -w0 backend/go-processor/go.mod
+          printf "\nGO_SUM:"
+          base64 -w0 backend/go-processor/go.sum
+          printf "\n"
