@@ -1,0 +1,39 @@
+name: Dependency Lock Refresh
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - package.json
+      - backend/go-processor/go.mod
+      - .github/workflows/dependency-refresh.yml
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache: false
+      - run: npm install --package-lock-only
+      - run: go mod tidy
+        working-directory: backend/go-processor
+      - name: Emit generated dependency files
+        run: |
+          echo "PACKAGE_LOCK_BEGIN"
+          base64 -w0 package-lock.json | fold -w 4000 | sed 's/^/PACKAGE_LOCK:'
+          echo "PACKAGE_LOCK_END"
+          echo "GO_MOD_BEGIN"
+          base64 -w0 backend/go-processor/go.mod | fold -w 4000 | sed 's/^/GO_MOD:'
+          echo "GO_MOD_END"
+          echo "GO_SUM_BEGIN"
+          base64 -w0 backend/go-processor/go.sum | fold -w 4000 | sed 's/^/GO_SUM:'
+          echo "GO_SUM_END"
